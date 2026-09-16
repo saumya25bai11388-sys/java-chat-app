@@ -1,0 +1,36 @@
+<div id="sd"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const themeMode = document.documentElement.dataset.mode;
+const dark = themeMode ? themeMode === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"anthropic-sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"anthropic-sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+  },
+});
+const { svg } = await mermaid.render('sd-svg', `sequenceDiagram
+  participant A as Client (Saumya)
+  participant H as ClientHandler
+  participant U as UserManager
+  participant L as Logger
+  participant B as Client (Saurav)
+
+  A->>H: connect + send username
+  H->>U: registerUser(username)
+  U-->>H: true (accepted)
+  H->>L: log("Saumya connected")
+  A->>H: "Hi Saurav!"
+  H->>L: log(message)
+  H->>B: broadcast(message)
+  B-->>H: (listening thread receives)
+`);
+document.getElementById('sd').innerHTML = svg;
+</script>
