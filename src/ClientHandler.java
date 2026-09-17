@@ -32,15 +32,18 @@ public class ClientHandler implements Runnable {
             Logger.log(username + " connected.");
             broadcast(username + " has joined the chat.", this);
 
-            String message;
+                         String message;
             while ((message = in.readLine()) != null) {
                 if (message.equalsIgnoreCase("/quit")) {
                     break;
                 }
+                if (message.trim().isEmpty()) {
+                    continue;
+                }
                 Logger.log(username + ": " + message);
                 broadcast(username + ": " + message, this);
             }
-        } catch (IOException e) {
+       } catch (IOException e) {
             Logger.log("Connection error: " + e.getMessage());
         } finally {
             disconnect();
